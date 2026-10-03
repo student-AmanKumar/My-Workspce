@@ -147,7 +147,6 @@ body[data-theme="dark"]{
 }
 
 
-
 /* =========================================================
    PRIVATE WORKSPACE UNLOCK
 ========================================================= */
@@ -372,6 +371,12 @@ body[data-theme="dark"]{
 
 .unlock-btn:active{
     transform:translateY(0) scale(.99);
+}
+
+.unlock-btn:disabled{
+    cursor:default;
+    opacity:.9;
+    transform:none;
 }
 
 .unlock-status{
@@ -620,9 +625,7 @@ body[data-theme="dark"]{
 
     background-size:200% 100%;
 
-    animation:
-        loaderProgress 2.6s ease forwards,
-        progressMove 1.1s linear infinite;
+    animation:none;
 }
 
 @keyframes loaderPulse{
@@ -1010,10 +1013,6 @@ body[data-theme="dark"]{
     letter-spacing:2px;
     text-transform:uppercase;
 }
-
-
-/* Mobile category toggle button.
-   Hidden on desktop; shown only on mobile. */
 
 .category-mobile-toggle{
     display:none;
@@ -1984,11 +1983,6 @@ body.js-ready .reveal.reveal-visible{
         margin-bottom:40px;
     }
 
-
-    /* =====================================================
-       MOBILE CATEGORY MENU
-    ===================================================== */
-
     .side-heading{
         display:none;
     }
@@ -2156,7 +2150,9 @@ body.js-ready .reveal.reveal-visible{
     .motivation-line{
         padding-top:16px;
     }
-}</style>
+}
+
+</style>
 </head>
 
 
@@ -2314,12 +2310,9 @@ body.js-ready .reveal.reveal-visible{
 
 <!-- =======================================================
      APP
-======================================================= -->      
+======================================================= -->
 
 <div class="app">
-
-
-    <!-- MOTIVATIONAL LINE -->
 
     <div
         class="motivation-line"
@@ -2329,8 +2322,6 @@ body.js-ready .reveal.reveal-visible{
         Keep building. Keep growing. 🚀
     </div>
 
-
-    <!-- TOPBAR -->
 
     <header class="topbar reveal">
 
@@ -2378,8 +2369,6 @@ body.js-ready .reveal.reveal-visible{
             </div>
 
 
-            <!-- ORIGINAL STYLE THEME TOGGLE -->
-
             <label
                 class="theme-toggle"
                 title="Toggle theme"
@@ -2409,8 +2398,6 @@ body.js-ready .reveal.reveal-visible{
     </header>
 
 
-    <!-- HERO -->
-
     <section class="hero reveal">
 
         <div class="hero-kicker">
@@ -2431,32 +2418,16 @@ body.js-ready .reveal.reveal-visible{
 
         <div class="hero-meta">
 
-            <span class="meta-pill">
-                Local Storage
-            </span>
-
-            <span class="meta-pill">
-                Editable
-            </span>
-
-            <span class="meta-pill">
-                Live Links
-            </span>
-
-            <span class="meta-pill">
-                Dark / Light
-            </span>
-
-            <span class="meta-pill">
-                Responsive
-            </span>
+            <span class="meta-pill">Local Storage</span>
+            <span class="meta-pill">Editable</span>
+            <span class="meta-pill">Live Links</span>
+            <span class="meta-pill">Dark / Light</span>
+            <span class="meta-pill">Responsive</span>
 
         </div>
 
     </section>
 
-
-    <!-- STATS -->
 
     <section class="stats reveal">
 
@@ -2488,21 +2459,13 @@ body.js-ready .reveal.reveal-visible{
     </section>
 
 
-    <!-- WORKSPACE -->
-
     <main class="workspace">
-
-
-        <!-- SIDEBAR -->
 
         <aside class="sidebar reveal" id="categorySidebar">
 
             <div class="side-heading">
                 Browse Categories
             </div>
-
-
-            <!-- MOBILE CATEGORY TOGGLE -->
 
             <button
                 class="category-mobile-toggle"
@@ -2521,12 +2484,10 @@ body.js-ready .reveal.reveal-visible{
 
             </button>
 
-
             <div
                 class="category-list"
                 id="categoryList"
             ></div>
-
 
             <div class="side-note">
                 Your workspace data is saved locally
@@ -2536,8 +2497,6 @@ body.js-ready .reveal.reveal-visible{
 
         </aside>
 
-
-        <!-- CONTENT -->
 
         <section class="content">
 
@@ -2565,8 +2524,6 @@ body.js-ready .reveal.reveal-visible{
             </div>
 
 
-            <!-- TOOLBAR -->
-
             <div class="toolbar reveal">
 
                 <input
@@ -2576,7 +2533,6 @@ body.js-ready .reveal.reveal-visible{
                     placeholder="Search projects, work, tags, links..."
                     autocomplete="off"
                 >
-
 
                 <select
                     class="select-box"
@@ -2591,7 +2547,6 @@ body.js-ready .reveal.reveal-visible{
 
                 </select>
 
-
                 <select
                     class="select-box"
                     id="sortSelect"
@@ -2605,7 +2560,6 @@ body.js-ready .reveal.reveal-visible{
 
                 </select>
 
-
                 <button
                     class="ghost-btn"
                     id="clearFilters"
@@ -2617,8 +2571,6 @@ body.js-ready .reveal.reveal-visible{
             </div>
 
 
-            <!-- WORK LIST -->
-
             <div
                 class="work-list reveal"
                 id="workList"
@@ -2628,8 +2580,6 @@ body.js-ready .reveal.reveal-visible{
 
     </main>
 
-
-    <!-- FOOTER -->
 
     <footer class="reveal">
 
@@ -2683,13 +2633,8 @@ body.js-ready .reveal.reveal-visible{
 
     </footer>
 
-
 </div>
 
-
-<!-- =======================================================
-     MODAL
-======================================================= -->
 
 <div
     class="modal-backdrop"
@@ -2736,9 +2681,7 @@ body.js-ready .reveal.reveal-visible{
                 id="editId"
             >
 
-
             <div class="form-grid">
-
 
                 <div class="field full">
 
@@ -3098,12 +3041,109 @@ setInterval(
 
 /* =========================================================
    LOADER
+   IMPORTANT:
+   Loader does NOT start on page load.
+   It starts only after successful unlock.
 ========================================================= */
 
 const loader =
     document.getElementById("loader");
 
 let loaderClosed = false;
+
+function startWorkspaceLoader(){
+
+    if(!loader || loaderClosed){
+        return;
+    }
+
+    loader.classList.remove(
+        "loader-hide"
+    );
+
+    const progress =
+        loader.querySelector(
+            ".loader-progress span"
+        );
+
+    const title =
+        loader.querySelector(
+            ".loader-title"
+        );
+
+    const sub =
+        loader.querySelector(
+            ".loader-sub"
+        );
+
+
+    if(title){
+
+        title.textContent =
+            "Aman Workspace";
+
+    }
+
+
+    if(sub){
+
+        sub.textContent =
+            "Accessing your workspace data...";
+
+    }
+
+
+    if(progress){
+
+        progress.style.animation =
+            "none";
+
+        void progress.offsetWidth;
+
+        progress.style.animation =
+            "loaderProgress 2.6s ease forwards, progressMove 1.1s linear infinite";
+
+    }
+
+
+    /* Data access stage */
+
+    setTimeout(
+        function(){
+
+            if(title){
+
+                title.textContent =
+                    "Workspace Ready";
+
+            }
+
+
+            if(sub){
+
+                sub.textContent =
+                    "Projects • Work • Ideas • Progress";
+
+            }
+
+        },
+        2200
+    );
+
+
+    /* Open workspace */
+
+    setTimeout(
+        function(){
+
+            hideLoader();
+
+        },
+        3200
+    );
+
+}
+
 
 function hideLoader(){
 
@@ -3117,27 +3157,25 @@ function hideLoader(){
         "loader-hide"
     );
 
-    setTimeout(function(){
+    setTimeout(
+        function(){
 
-        if(
-            loader &&
-            loader.parentNode
-        ){
+            if(
+                loader &&
+                loader.parentNode
+            ){
 
-            loader.parentNode.removeChild(
-                loader
-            );
+                loader.parentNode.removeChild(
+                    loader
+                );
 
-        }
+            }
 
-    },700);
+        },
+        700
+    );
 
 }
-
-setTimeout(
-    hideLoader,
-    3200
-);
 
 
 /* =========================================================
@@ -3746,8 +3784,6 @@ function renderCategories(){
 
                     renderWorks();
 
-                    /* Close mobile menu after selection */
-
                     if(
                         window.innerWidth <= 760 &&
                         categorySidebar
@@ -3780,10 +3816,6 @@ function renderCategories(){
 
 }
 
-
-/* =========================================================
-   MOBILE CATEGORY TOGGLE
-========================================================= */
 
 if(categoryMobileToggle){
 
@@ -4110,41 +4142,15 @@ function createWorkHTML(
     const links = [];
 
 
-    addLink(
-        "Live",
-        item.live
-    );
-
-    addLink(
-        "GitHub",
-        item.github
-    );
-
-    addLink(
-        "LinkedIn",
-        item.linkedin
-    );
-
-    addLink(
-        "Dashboard",
-        item.dashboard
-    );
-
-    addLink(
-        "Certificate",
-        item.certificate
-    );
-
-    addLink(
-        "Other",
-        item.other
-    );
+    addLink("Live",item.live);
+    addLink("GitHub",item.github);
+    addLink("LinkedIn",item.linkedin);
+    addLink("Dashboard",item.dashboard);
+    addLink("Certificate",item.certificate);
+    addLink("Other",item.other);
 
 
-    function addLink(
-        label,
-        url
-    ){
+    function addLink(label,url){
 
         if(!url){
             return;
@@ -4185,7 +4191,6 @@ function createWorkHTML(
             class="work-item"
             data-id="${escapeHtml(item.id)}"
         >
-
 
             <div class="work-index">
                 ${String(index + 1).padStart(2,"0")}
@@ -5010,26 +5015,11 @@ function escapeHtml(value){
     return String(
         value ?? ""
     )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -5303,44 +5293,66 @@ function initReveal(){
 }
 
 
-
 /* =========================================================
    PRIVATE WORKSPACE UNLOCK
 ========================================================= */
 
-const PRIVATE_ID = "Aman";
-const PRIVATE_PASSWORD = "AK@2026#Workspace";
+const PRIVATE_ID =
+    "Aman";
+
+const PRIVATE_PASSWORD =
+    "AK@2026#Workspace";
 
 const privateUnlock =
-    document.getElementById("privateUnlock");
+    document.getElementById(
+        "privateUnlock"
+    );
 
 const unlockForm =
-    document.getElementById("unlockForm");
+    document.getElementById(
+        "unlockForm"
+    );
 
 const unlockId =
-    document.getElementById("unlockId");
+    document.getElementById(
+        "unlockId"
+    );
 
 const unlockPassword =
-    document.getElementById("unlockPassword");
+    document.getElementById(
+        "unlockPassword"
+    );
 
 const unlockEye =
-    document.getElementById("unlockEye");
+    document.getElementById(
+        "unlockEye"
+    );
 
 const unlockStatus =
-    document.getElementById("unlockStatus");
+    document.getElementById(
+        "unlockStatus"
+    );
 
 const unlockBtn =
-    document.getElementById("unlockBtn");
+    document.getElementById(
+        "unlockBtn"
+    );
 
-let workspaceUnlocked = false;
+let workspaceUnlocked =
+    false;
 
-function setUnlockStatus(message,type){
+
+function setUnlockStatus(
+    message,
+    type
+){
 
     if(!unlockStatus){
         return;
     }
 
-    unlockStatus.textContent = message;
+    unlockStatus.textContent =
+        message;
 
     unlockStatus.classList.remove(
         "error",
@@ -5348,10 +5360,15 @@ function setUnlockStatus(message,type){
     );
 
     if(type){
-        unlockStatus.classList.add(type);
+
+        unlockStatus.classList.add(
+            type
+        );
+
     }
 
 }
+
 
 function unlockWorkspace(){
 
@@ -5359,43 +5376,84 @@ function unlockWorkspace(){
         return;
     }
 
-    workspaceUnlocked = true;
+    workspaceUnlocked =
+        true;
+
 
     setUnlockStatus(
-        "Access granted · Opening workspace...",
+        "Access granted · Preparing workspace data...",
         "success"
     );
 
+
     if(unlockBtn){
+
         unlockBtn.innerHTML =
             '<i class="fa-solid fa-circle-check"></i>&nbsp; Access Granted';
-        unlockBtn.disabled = true;
+
+        unlockBtn.disabled =
+            true;
+
     }
 
-    if(privateUnlock){
-        privateUnlock.classList.add(
-            "unlock-hide"
-        );
-        privateUnlock.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-    }
+
+    /*
+       First unlock the workspace layer.
+       Loader is started after a short transition,
+       so it feels like the system is opening/accessing
+       private workspace data.
+    */
 
     document.body.classList.add(
         "workspace-unlocked"
     );
 
+
+    setTimeout(
+        function(){
+
+            if(privateUnlock){
+
+                privateUnlock.classList.add(
+                    "unlock-hide"
+                );
+
+                privateUnlock.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+            }
+
+        },
+        180
+    );
+
+
+    setTimeout(
+        function(){
+
+            startWorkspaceLoader();
+
+        },
+        650
+    );
+
 }
 
-if(unlockEye && unlockPassword){
+
+if(
+    unlockEye &&
+    unlockPassword
+){
 
     unlockEye.addEventListener(
         "click",
         function(){
 
             const isPassword =
-                unlockPassword.type === "password";
+                unlockPassword.type ===
+                "password";
 
             unlockPassword.type =
                 isPassword
@@ -5421,6 +5479,7 @@ if(unlockEye && unlockPassword){
 
 }
 
+
 if(unlockForm){
 
     unlockForm.addEventListener(
@@ -5439,21 +5498,30 @@ if(unlockForm){
             const enteredPassword =
                 unlockPassword.value;
 
+
             if(
-                enteredId === PRIVATE_ID &&
-                enteredPassword === PRIVATE_PASSWORD
+                enteredId ===
+                    PRIVATE_ID &&
+                enteredPassword ===
+                    PRIVATE_PASSWORD
             ){
 
                 unlockWorkspace();
 
+
                 setTimeout(
                     function(){
+
                         if(privateUnlock){
+
                             privateUnlock.remove();
+
                         }
+
                     },
-                    800
+                    950
                 );
+
 
             }else{
 
@@ -5471,14 +5539,20 @@ if(unlockForm){
 
                 }
 
+
                 setUnlockStatus(
                     "Access denied · Check your ID and password.",
                     "error"
                 );
 
+
                 if(unlockPassword){
-                    unlockPassword.value = "";
+
+                    unlockPassword.value =
+                        "";
+
                     unlockPassword.focus();
+
                 }
 
             }
@@ -5487,7 +5561,6 @@ if(unlockForm){
     );
 
 }
-
 
 
 /* =========================================================
@@ -5641,36 +5714,15 @@ initReveal();
 
 
 /* =========================================================
-   FINAL LOADER SAFETY
+   NO AUTO LOADER
+=========================================================
+
+   IMPORTANT:
+   There is intentionally NO window.load / setTimeout
+   here. The loader is started only by unlockWorkspace()
+   after the correct credentials are entered.
+
 ========================================================= */
-
-if(
-    document.readyState === "complete"
-){
-
-    setTimeout(
-        hideLoader,
-        300
-    );
-
-}else{
-
-    window.addEventListener(
-        "load",
-        function(){
-
-            setTimeout(
-                hideLoader,
-                300
-            );
-
-        },
-        {
-            once:true
-        }
-    );
-
-}
 
 })();
 
